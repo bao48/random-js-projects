@@ -1,0 +1,98 @@
+<form class="FlavorCombo" id ="FlavorCombo" style="width: 55%; margin: 0 auto;" method="post" name="FlavorCombo" onsubmit="return false"><!--post doesn't allow others to see info in url-->
+<h4 style="margin-top: 2em;">How many words would you like to be included? (e.g. "easy peasy" "lemon" "poppyseed" "chocolate chip" "quick bread" = 5) {required}</h4>
+<input name="wordNum" id="wordNum" style="width: 25%; height: 3em; padding: 0.75em; margin:0em;" type="number" required />
+
+<h4 style="margin-top: 2em;">Recipe descriptors {required}</h4>
+<textarea name="recipe" id="recipe" style="width: 100%; height: 200px; padding: 5px; margin:0em;" placeholder="enter in something like: easy peasy, single lady, best, etc." required></textarea>
+
+<h4 style="margin-top: 2em;">Flavor descriptors {required}</h4>
+<textarea name="flavor" id="flavor" style="width: 100%; height: 200px; padding: 5px; margin:0em;" placeholder="enter in something like: vanilla, blueberry, cardamon" required></textarea>
+
+<h4 style="margin-top: 2em;">Dish descriptors {required}</h4>
+<textarea name="dish" id="dish" style="width: 100%; height: 200px; padding: 5px; margin:0em;" placeholder="enter in something like: casserole, cake, energy balls" required></textarea>
+
+<input type="submit" class="submitbtn" />
+</form>
+<div class="results" style="width: 55%; margin: 10 auto; background: #eee; padding: 1em;" >
+   <h3 class="submitted" style="text-align: center;"></h3>
+   <h4 class="finRecipe" style="text-align: center;"></h4>
+</div>
+
+<script>
+jQuery(document).ready(function() {
+console.log("hey");
+jQuery(".submitbtn").click(function () {
+   var wordNumber = 0;
+   var x = 0;
+   var i = 0;
+   var stringfin = "";
+   var temp;
+   var rec = new Array();
+   var flav = new Array();
+   var dis = new Array();
+   var tempInt = new Array();
+   wordNumber = document.getElementById("wordNum").value;
+   if(jQuery("recipe").val() != "" && jQuery("flavor").val() != "" && jQuery("dish").val() != "" && jQuery("wordNum").val() != "" && wordNumber >= 3) {
+      console.log(wordNumber);
+      temp = document.getElementById("recipe").value;
+      while (x==0) {
+         if (temp.indexOf(", ") != -1) {
+            rec[i] = temp.substring(0, temp.indexOf(","));
+            temp = temp.substring(temp.indexOf(",") + 2)
+            i++;
+         } else {
+            rec[i] = temp;
+            i++;
+            x = -1;
+         }
+      }
+      stringfin = rec[Math.floor(Math.random()*i)];
+      i = 0;
+      x = 0;
+      temp = document.getElementById("flavor").value;
+      while (x==0) {
+         if (temp.indexOf(",") != -1) {
+            flav[i] = temp.substring(0, temp.indexOf(","));
+            temp = temp.substring(temp.indexOf(",") + 2)
+            i++;
+         } else {
+            flav[i] = temp;
+            x = -1;
+            i++;
+         }
+      }
+      if (flav.length < wordNumber-2) {
+         jQuery(".submitted").html("Your entry is invalid");
+         jQuery(".finRecipe").html("");
+      } else {
+         for (var j = 0; j < wordNumber-2; j++) {
+            tempInt[j] = Math.floor(Math.random()*(i-j));
+            stringfin = stringfin + " " + flav[tempInt[j]];
+            flav.splice(tempInt[j], 1);
+         }
+         i = 0;
+         x = 0;
+         temp = document.getElementById("dish").value;
+         while (x==0) {
+            if (temp.indexOf(", ") != -1) {
+               dis[i] = temp.substring(0, temp.indexOf(","));
+               temp = temp.substring(temp.indexOf(",") + 2)
+               i++;
+            } else {
+               dis[i]=temp;
+               x = -1;
+               i++;
+            }
+         }
+         stringfin = stringfin + " " + dis[Math.floor(Math.random()*i)];
+         jQuery(".submitted").html("Proposed Dish");
+         jQuery(".finRecipe").html(stringfin);
+      }
+   } else {
+      jQuery(".submitted").html("Your entry is invalid");
+      jQuery(".finRecipe").html("");
+   }
+   return false;
+});
+});
+</script>
